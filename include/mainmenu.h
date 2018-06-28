@@ -1,9 +1,7 @@
 #pragma once
-#include "menu.h"
 
-
-class MainMenu : public Menu {
-    
-};
-
-void setupMenus();
+/* **************************************************************
+ * Pre-Condition: No post-conditions
+ * Post-Condition: No post-conditions
+ ***************************************************************/
+void displayMainMenu();
