@@ -41,6 +41,8 @@
 
 int main() {
     displayMainMenu();
+    // clearing the screen before exiting
+    clearScreen();
     return 0;
 }   
 
