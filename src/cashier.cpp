@@ -35,13 +35,10 @@
  */
 #include <iostream>
 #include "cashier.h"
-#include "utils.h"
 #include <fstream>
 #include <string>
-#include "utils.h"
 #include <iomanip>
 #include "mainmenu.h"
-
 void getInput(const char* prompty, std::string& destination){
     using namespace std;
     cout << prompty << endl;
@@ -74,7 +71,6 @@ void cashier(){
     std::string title = "";
     float price = 0.f;
     const float TAX = 1.06;
-    float total = 0.f; 
     do {
         if (date != "" && ISBN != "" && title != "" && quantity != 0 && price != 0.f){
             float subTotal = price * quantity;
@@ -164,6 +160,7 @@ void cashier(){
         case 6:
             return;
         default:
+
             std::cout << "That is not a valid choice... Press Enter to continue" << std::endl;
             std::cin.ignore().get();
             continue;

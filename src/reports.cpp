@@ -26,10 +26,10 @@
  */
 
 #include <iostream>
-#include "utils.h"
 #include "cashier.h"
 #include "invmenu.h"
 #include "reports.h"
+#include "mainmenu.h"
 
 void reports(){
     int choice;
@@ -50,7 +50,7 @@ void reports(){
                   << "|                                          |\n"                    
                   << "|         Enter a number between 1-7       |\n" 
                   << "|                                          |\n"
-                  << "--------------------------------------------" << std::endl; 
+                  << "--------------------------------------------\n";
             
         success = getIntegerInput(choice);
         if (!success){

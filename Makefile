@@ -5,7 +5,7 @@ BINARIES=bin/serendipity.exe
 
 all:
 	@echo Compiling...
-	@$(COMPILER) $(CXXFLAGS) $(SOURCE) -o bin/serendipity
+	@$(COMPILER) $(CXXFLAGS) $(SOURCE) -o serendipity
 	@echo Done
 
 clean:

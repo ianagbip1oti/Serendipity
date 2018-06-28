@@ -12,7 +12,7 @@
  * Algorithm:
  *  Step 1: Display the inventory memu for the user
  *  Step 2: Get their choice for the menu
- *  Step 3: Process their inputu
+ *  Step 3: Process their input
  * ***********************************************************
  *                      DATA DICTIONARY
  * 
@@ -30,7 +30,6 @@
  */
 #include <iostream>
 #include <iomanip>
-#include "utils.h"
 #include "mainmenu.h"
 #include "invmenu.h"
 void invMenu(){
@@ -57,6 +56,9 @@ void invMenu(){
         if (!success){
             std::cin.clear();
             std::cin.ignore(1000, '\n');
+            std::cout << "That was not a valid answer" << std::endl;
+            std::cin.get();
+            continue;
         }
 
         switch (choice){

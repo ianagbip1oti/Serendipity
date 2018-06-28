@@ -34,10 +34,10 @@
 
 #include <iostream>
 #include "mainmenu.h"
-#include "utils.h"
 #include "cashier.h"
 #include "invmenu.h"
 #include "reports.h"
+#include <cstdlib>
 
 int main() {
     displayMainMenu();
@@ -87,3 +87,27 @@ void displayMainMenu(){
         }
     } while (success);
 }
+
+void clearScreen(){
+    #ifdef _WIN32
+        std::system("cls");
+    #else
+        std::system("clear");
+    #endif
+}
+
+
+bool getIntegerInput(int& choice){
+    int temp;
+    std::cin >> temp;
+    if (std::cin.fail()){
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+        return false;
+    }
+    choice = temp;
+    return true;
+}
+
+
+
