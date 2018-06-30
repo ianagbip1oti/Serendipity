@@ -1,7 +1,11 @@
 #pragma once
 #include <string>
 
+/**
+ * Preventing repetition
+ */
 using std::string;
+
 /* **************************************************************
  * Pre-Condition: No post-conditions
  * Post-Condition: No post-conditions
@@ -9,10 +13,10 @@ using std::string;
 void invMenu(string[20], string[20], string[20], string[20], string[20], int[20], double[20], double[20], int&);
 
 /* **************************************************************
- * Pre-Condition: No post-conditions
+ * Pre-Condition: The book's isbn or title must be with in the array
  * Post-Condition: No post-conditions
  ***************************************************************/
-void lookUpBook();
+int lookUpBook(string, string[20], string[20],  int&);
 
 /* **************************************************************
  * Pre-Condition: No post-conditions

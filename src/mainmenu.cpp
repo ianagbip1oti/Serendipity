@@ -109,7 +109,7 @@ void getIntegerInput(const char *prompt, int &choice) {
     while (true) {
         std::cout << prompt << std::endl;
         int temp;
-        std::cin >> temp >> std::ws;
+        std::cin >> temp;
         if (std::cin.fail()) {
             std::cin.clear();
             std::cin.ignore(1000, '\n');
@@ -128,7 +128,7 @@ void getDoubleInput(const char *prompt, double &choice) {
     while (true) {
         std::cout << prompt << std::endl;
         double temp;
-        std::cin >> temp >> std::ws;
+        std::cin >> temp;
         if (std::cin.fail()) {
             std::cin.clear();
             std::cin.ignore(1000, '\n');
@@ -148,6 +148,7 @@ void getStringInput(const char *prompt, std::string &choice) {
         // we need to clear the buffer from
         // the previous cin >> statements
         std::string temp;
+        std::cin.ignore(1000, '\n');
         std::getline(std::cin, temp);
         if (temp.empty()) {
             std::cin.ignore(1000, '\n');
