@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.6)
+project(Serendipity)
+set(CMAKE_CXX_STANDARD 11)
+file(GLOB SOURCE_FILES src/*.cpp)
+file(GLOB INCLUDE_FILES include/*.h)
+include_directories(include)
+add_executable(Serendipity ${SOURCE_FILES} ${INCLUDE_FILES})

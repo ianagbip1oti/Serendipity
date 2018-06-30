@@ -51,18 +51,11 @@ void reports(){
                   << "|         5. Listing by Cost               |\n"
                   << "|         6. Listing by Age                |\n"
                   << "|         7. Return to Main Menu           |\n"                  
-                  << "|                                          |\n"                    
-                  << "|         Enter a number between 1-7       |\n" 
                   << "|                                          |\n"
                   << "--------------------------------------------\n";
             
-        success = getIntegerInput(choice);
-        if (!success){
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
+        getIntegerInput("Enter a number between 1-7", choice);
 
-            continue;
-        }
         switch (choice){
         case 1:
             repListing();

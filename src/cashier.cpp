@@ -57,7 +57,7 @@ void getInput(const char* prompty, int& destination){
 }
 
 void cashier(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
-             string dateAdded[20], int quantityOnHand[20], double wholesaleCost[20], double retailPrice[20]){
+             string dateAdded[20], int quantityOnHand[20], double wholesaleCost[20], double retailPrice[20], int& index){
     int menuSelection;
     bool success;
     char choice;
@@ -123,11 +123,10 @@ void cashier(string bookTitle[20], string isbn[20], string author[20], string pu
                   << "         4. Enter the Title            Current Title: " << title << "\n"                        
                   << "         5. Enter the Price            Current Price " << price << "\n"                         
                   << "         6. Back to the Main Menu         \n"
-                  << "                                          \n"  
-                  << "         Enter a number between 1-6       \n" 
-                  << "                                          \n"; 
+                  << "                                          \n";
         
-        success = getIntegerInput(menuSelection);
+        getIntegerInput("Enter a number between 1-6", menuSelection);
+
         switch (menuSelection){
         case 1:
             getInput("Please enter the date the book was published in.", date);
@@ -156,7 +155,6 @@ void cashier(string bookTitle[20], string isbn[20], string author[20], string pu
         case 6:
             return;
         default:
-
             std::cout << "That is not a valid choice... Press Enter to continue" << std::endl;
             std::cin.ignore().get();
             continue;

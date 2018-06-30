@@ -37,6 +37,7 @@
 
 using std::string;
 const int DBSIZE = 20;
+
 int main() {
     string bookTitle[DBSIZE];
     string isbn[DBSIZE];
@@ -52,86 +53,111 @@ int main() {
     // clearing the screen before exiting
     clearScreen();
     return 0;
-}   
+}
 
-void displayMainMenu(string bookTitle[DBSIZE], string isbn[DBSIZE], string author[DBSIZE], string publisher[DBSIZE], string dateAdded[DBSIZE], int quantity[DBSIZE], double wholesaleCost[DBSIZE], double retailPrice[DBSIZE], int index){
+void displayMainMenu(string bookTitle[DBSIZE], string isbn[DBSIZE], string author[DBSIZE], string publisher[DBSIZE],
+                     string dateAdded[DBSIZE], int quantity[DBSIZE], double wholesaleCost[DBSIZE],
+                     double retailPrice[DBSIZE], int &index) {
 
     int choice;
     bool success;
-    do {
+    while (true) {
         clearScreen();
         std::cout << "--------------------------------------------\n"
-                  << "|         Serendipity Booksellers          |\n"  
-                  << "|                Main Menu                 |\n"  
-                  << "|                                          |\n"  
-                  << "|         1. Cashier Module                |\n" 
+                  << "|         Serendipity Booksellers          |\n"
+                  << "|                Main Menu                 |\n"
+                  << "|                                          |\n"
+                  << "|         1. Cashier Module                |\n"
                   << "|         2. Inventory Database Module     |\n"
                   << "|         3. Report Module                 |\n"
-                  << "|         4. Exit                          |\n" 
+                  << "|         4. Exit                          |\n"
                   << "|                                          |\n"
-                  << "|         Enter a number between 1-4       |\n" 
-                  << "|                                          |\n"
-                  << "--------------------------------------------" << std::endl; 
-            
-        success = getIntegerInput(choice);
-        if (!success){
+                  << "--------------------------------------------" << std::endl;
+
+        getIntegerInput("Enter a number between 1-4",  choice);
+
+        switch (choice) {
+            case 1:
+                cashier(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
+                break;
+            case 2:
+                invMenu(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
+                break;
+            case 3:
+                reports();
+                break;
+            case 4:
+                return;
+            default:
+                std::cout << "That is not a valid choice... Press Enter to continue" << std::endl;
+                std::cin.ignore().get();
+                continue;
+        }
+    }
+}
+
+void clearScreen() {
+#ifdef _WIN32
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
+}
+
+
+void getIntegerInput(const char* prompt, int &choice) {
+    while (true) {
+        std::cout << prompt << std::endl;
+        int temp;
+        std::cin >> temp;
+        if (std::cin.fail()) {
             std::cin.clear();
             std::cin.ignore(1000, '\n');
+            std::cout << "That was not a valid double... Press enter to return" << std::endl;
+            std::cin.get();
             continue;
         }
-        switch (choice){
-        case 1:
-            cashier(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice);
-            break;
-        case 2:
-            invMenu(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
-            break;
-        case 3:
-            reports();
-            break;
-        case 4:
-            return;
-        default:
-            std::cout << "That is not a valid choice... Press Enter to continue" << std::endl;
-            std::cin.ignore().get();
+        choice = temp;
+        return;
+    }
+
+}
+
+
+void getDoubleInput(const char* prompt, double &choice) {
+    while (true) {
+        std::cout << prompt << std::endl;
+        double temp;
+        std::cin >> temp;
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            std::cout << "That was not a valid double... Press enter to return" << std::endl;
+            std::cin.get();
             continue;
         }
-    } while (success);
-}
-
-void clearScreen(){
-    #ifdef _WIN32
-        std::system("cls");
-    #else
-        std::system("clear");
-    #endif
-}
-
-
-bool getIntegerInput(int& choice){
-    int temp;
-    std::cin >> temp;
-    if (std::cin.fail()){
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        return false;
+        choice = temp;
+        return;
     }
-    choice = temp;
-    return true;
 }
 
 
-bool getStringInput(std::string& choice){
-    std::string temp = "";
-    std::getline(std::cin, temp);
-    if (temp == ""){
-        std::cin.clear()
-        std::cin.ignore(10000, '\n');
-        return false;
-
+void getStringInput(const char* prompt, std::string& choice) {
+    while (true) {
+        std::cout << prompt << std::endl;
+        std::string temp;
+        std::getline(std::cin, temp);
+        if (temp.empty()) {
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            std::cout << "That was not a valid choice... Press enter to return" << std::endl;
+            std::cin.get();
+            std::cin.clear();
+            continue;
+        }
+        choice = temp;
+        return;
     }
-    choice = temp;
-    return true;
 }
 
 
