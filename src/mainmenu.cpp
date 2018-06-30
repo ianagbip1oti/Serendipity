@@ -7,8 +7,7 @@
  * Creation Date:              6/19/2018
  * Date of Last Modification:  6/19/2018
  * ***********************************************************
- * Purpose: Nagivating through menus and adding a book
- * ***********************************************************
+ * Purpose: Nagivating through menus and adding a book * ***********************************************************
  * Algorithm:
  *  Step 1: Display the main menu for the user
  * ***********************************************************
@@ -18,10 +17,7 @@
  * 
  * NAME                 DATA TYPE               VALUE
  * -------------        ------------            -----------
- * header               std::string[]           {"Number", "Location", "Description"}
- * cashier              std::string[]           {"1", "Cashier", "Goes to the cashier page"}
- * reports              std::string[]           {"2" ,"Reports", "Goes to the reports page"}
- * inventory            std::string[]           {"3", "Inventory", "Goes to the inventory page"}
+ * DBSIZE               int                     20 
  * 
  * 
  * VARIABLES:
@@ -39,14 +35,27 @@
 #include "reports.h"
 #include <cstdlib>
 
+using std::string;
+const int DBSIZE = 20;
 int main() {
-    displayMainMenu();
+    string bookTitle[DBSIZE];
+    string isbn[DBSIZE];
+    string author[DBSIZE];
+    string publisher[DBSIZE];
+    string dateAdded[DBSIZE];
+    int quantity[DBSIZE];
+    double wholesaleCost[DBSIZE];
+    double retailPrice[DBSIZE];
+    int bookCount = 0;
+
+    displayMainMenu(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, bookCount);
     // clearing the screen before exiting
     clearScreen();
     return 0;
 }   
 
-void displayMainMenu(){
+void displayMainMenu(string bookTitle[DBSIZE], string isbn[DBSIZE], string author[DBSIZE], string publisher[DBSIZE], string dateAdded[DBSIZE], int quantity[DBSIZE], double wholesaleCost[DBSIZE], double retailPrice[DBSIZE], int index){
+
     int choice;
     bool success;
     do {
@@ -72,10 +81,10 @@ void displayMainMenu(){
         }
         switch (choice){
         case 1:
-            cashier();
+            cashier(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice);
             break;
         case 2:
-            invMenu();
+            invMenu(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
             break;
         case 3:
             reports();
@@ -111,5 +120,18 @@ bool getIntegerInput(int& choice){
     return true;
 }
 
+
+bool getStringInput(std::string& choice){
+    std::string temp = "";
+    std::getline(std::cin, temp);
+    if (temp == ""){
+        std::cin.clear()
+        std::cin.ignore(10000, '\n');
+        return false;
+
+    }
+    choice = temp;
+    return true;
+}
 
 

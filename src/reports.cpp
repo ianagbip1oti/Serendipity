@@ -23,6 +23,10 @@
  * 
  * NAME                 DATA TYPE               VALUE
  * -------------        ------------            -----------
+ * choice               int                     null
+ * success              bool                    null
+ * 
+ * 
  */
 
 #include <iostream>
@@ -56,6 +60,7 @@ void reports(){
         if (!success){
             std::cin.clear();
             std::cin.ignore(1000, '\n');
+
             continue;
         }
         switch (choice){

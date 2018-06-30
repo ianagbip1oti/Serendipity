@@ -39,6 +39,7 @@
 #include <string>
 #include <iomanip>
 #include "mainmenu.h"
+
 void getInput(const char* prompty, std::string& destination){
     using namespace std;
     cout << prompty << endl;
@@ -55,13 +56,8 @@ void getInput(const char* prompty, int& destination){
     cin >> destination;
 }
 
-void cashier(){
-    std::string bookTitle[20];
-    std::string isbn[20];
-    std::string author[20];
-    std::string publisher[20];
-    std::string dateAddded[20];
-    
+void cashier(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
+             string dateAdded[20], int quantityOnHand[20], double wholesaleCost[20], double retailPrice[20]){
     int menuSelection;
     bool success;
     char choice;
@@ -167,5 +163,4 @@ void cashier(){
         }
         
     } while(true);
-    displayMainMenu();
 }
