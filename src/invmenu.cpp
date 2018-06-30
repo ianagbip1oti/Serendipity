@@ -91,22 +91,22 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
     bool success;
     int choice;
     std::cout << "You selected Add Book" << std::endl;
-    do {
+    while (true) {
         clearScreen();
         std::cout << "-------------------------------------------\n"
                   << "|         Serendipity Booksellers          \n"
                   << "|                 Add Book                 \n"
                   << "|                                          \n"
-                  << "|         1. Enter book title       | --Title           " << newBookTitle << "\n"
-                  << "|         2. Enter ISBN             | --ISBN            " << newISBN << "\n"
-                  << "|         3. Enter Author           | --Author          " << newAuthor << "\n"
-                  << "|         4. Enter Publisher        | --Publisher       " << newPublisher << "\n"
-                  << "|         5. Enter Date             | --Date Added      " << newDate << "\n"
-                  << "|         6. Enter Quantity         | --Quantity        " << newQuantity << "\n"
-                  << "|         7. Enter Wholesale Cost   | --Wholesale Cost  " << newQuantity << "\n"
-                  << "|         8. Enter Retail Price     | --Wholesale Price " << newQuantity << "\n"
-                  << "|         9. Save book to inventory "
-                  << "|         0. Return to main menu"
+                  << "|         1. Enter book title                | --Title           " << newBookTitle      << "\n"
+                  << "|         2. Enter ISBN                      | --ISBN            " << newISBN           << "\n"
+                  << "|         3. Enter Author                    | --Author          " << newAuthor         << "\n"
+                  << "|         4. Enter Publisher                 | --Publisher       " << newPublisher      << "\n"
+                  << "|         5. Enter Date                      | --Date Added      " << newDate           << "\n"
+                  << "|         6. Enter Quantity                  | --Quantity        " << newQuantity       << "\n"
+                  << "|         7. Enter Wholesale Cost            | --Wholesale Cost  " << newWholesaleCost  << "\n"
+                  << "|         8. Enter Retail Price              | --Retail Price    " << newRetailPrice    << "\n"
+                  << "|         9. Save book to inventory        \n"
+                  << "|         0. Return to main menu           \n"
                   << "|                                          \n"
                   << "--------------------------------------------" << std::endl;
         getIntegerInput("Enter a number between 0-9", choice);
@@ -127,12 +127,20 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
             break;
         case 5:
             getStringInput("Please enter the date", newDate);
-            return;
+            break;
         case 6:
             getIntegerInput("Please enter the quantity on hand", newQuantity);
+            break;
         case 7:
             getDoubleInput("Please enter the wholesale cost", newWholesaleCost);
-
+            break;
+        case 8:
+            getDoubleInput("Please enter the retail price", newRetailPrice);
+            break;
+        case 9:
+            break;
+        case 0:
+            return;
         default:
             std::cin.clear();
             std::cin.ignore(1000, '\n');
@@ -141,7 +149,7 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
             continue;
         }
 
-    } while (!success);
+    }
 
 
 }
