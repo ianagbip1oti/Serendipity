@@ -120,7 +120,6 @@ void getIntegerInput(const char *prompt, int &choice) {
         choice = temp;
         return;
     }
-
 }
 
 

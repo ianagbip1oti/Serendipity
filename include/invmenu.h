@@ -28,10 +28,22 @@ void addBook(string[20], string[20], string[20], string[20], string[20], int[20]
  * Pre-Condition: No post-conditions
  * Post-Condition: No post-conditions
  ***************************************************************/
-void editBook();
+void editBook(string[20], string[20], string[20], string[20], string[20], int[20], double[20], double[20], int&);
 
 /* **************************************************************
  * Pre-Condition: No post-conditions
  * Post-Condition: No post-conditions
  ***************************************************************/
 void deleteBook();
+
+/* **************************************************************
+ * Pre-Condition: No post-conditions
+ * Post-Condition: No post-conditions
+ ***************************************************************/
+void printBook(string[20], string[20], string[20], string[20], string[20], int[20], double[20], double[20], int&);
+
+/* **************************************************************
+ * Pre-Condition: No post-conditions
+ * Post-Condition: No post-conditions
+ ***************************************************************/
+void getDate(char[60]);
