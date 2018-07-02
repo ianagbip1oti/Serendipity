@@ -70,9 +70,8 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                     }
 
                     std::cout << "[FOUND]: " << bookTitle[searchIndex] << "\nView this record? (y/n)\n";
-                    std::cin.ignore(1000, '\n');
                     std::cin >> confirmation;
-                    if (tolower(confirmation) == 'y'){
+                    if (tolower(confirmation) == 'y') {
                         clearScreen();
                         printBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
                                   searchIndex);
@@ -85,19 +84,84 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
             case 2:
                 addBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
                 break;
-            case 3:
-                if (index == 0){
-                   std::cout << "There are no books to edit, press enter to return to the menu." << std::endl;
-                   std::cin.ignore(1000, '\n');
-                   std::cin.get();
-                   break;
+            case 3: {
+                if (index == 0) {
+                    std::cout << "There are no books to edit, press enter to return to the menu." << std::endl;
+                    std::cin.ignore(1000, '\n');
+                    std::cin.get();
+                    break;
                 }
-                editBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
+                std::string search;
+                char confirmation;
+                getStringInput("Enter the book you want to edit. 'cancel' to go back", search);
+                if (search == "cancel") {
+                    break;
+                }
+                int searchIndex = lookUpBook(search, bookTitle, isbn, index);
+
+
+                if (searchIndex == -1) {
+                    std::cout << "That book was not found, press enter to search again." << std::endl;
+                    std::cin.get();
+                    continue;
+                }
+
+                printBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
+                          searchIndex);
+                std::cout << "Edit this record?" << std::endl;
+                std::cin.ignore(1000, '\n');
+                std::cin >> confirmation;
+
+                if (tolower(confirmation) == 'y') {
+                    clearScreen();
+                    editBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
+                               searchIndex);
+                }
+
                 break;
-            case 4:
-                deleteBook();
+            }
+            case 4: {
+                while (true){
+                    std::string search;
+                    char confirmation;
+                    getStringInput("Enter the name or the ISBN of the book you want to delete. 'cancel' to go back", search);
+                    if (search == "cancel") {
+                        break;
+                    }
+                    int searchIndex = lookUpBook(search, bookTitle, isbn, index);
+
+
+                    if (searchIndex == -1) {
+                        std::cout << "That book was not found, press enter to search again." << std::endl;
+                        std::cin.get();
+                        continue;
+                    }
+
+                    std::cout << "[FOUND]: " << bookTitle[searchIndex] << "\nAre you sure you want to delete this record? (y/n)\n";
+                    std::cin.ignore(1000, '\n');
+                    std::cin >> confirmation;
+
+                    if (tolower(confirmation) == 'y') {
+                        clearScreen();
+                        deleteBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
+                                   searchIndex, index);
+                    } else {
+                        break;
+                    }
+                    confirmation = '\0';
+                    std::cout << "Delete another book? (y/n)" << std::endl;
+                    std::cin >> confirmation;
+
+                    if (tolower(confirmation) == 'y'){
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+            }
                 break;
             case 5:
+                // return to main menu
                 return;
             default:
                 std::cout << "That is not a valid choice" << std::endl;
@@ -136,14 +200,14 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
                   << "                              Today's date: " << buffer << "\n"
                   << "                            Current Database Size: " << index << "                       \n"
                   << "                                                                                           \n"
-                  << "         1. Enter book title          | --Old Title           " << newBookTitle << "\n"
-                  << "         2. Enter ISBN                | --Old ISBN            " << newISBN << "\n"
-                  << "         3. Enter Author              | --Old Author          " << newAuthor << "\n"
-                  << "         4. Enter Publisher           | --Old Publisher       " << newPublisher << "\n"
-                  << "         5. Enter Date                | --Old Date Added      " << newDate << "\n"
-                  << "         6. Enter Quantity            | --Old Quantity        " << newQuantity << "\n"
-                  << "         7. Enter Wholesale Cost      | --Old Wholesale Cost  $" << newWholesaleCost << "\n"
-                  << "         8. Enter Retail Price        | --Old Retail Price    $" << newRetailPrice << "\n"
+                  << "         1. Enter book title          | --Title           " << newBookTitle << "\n"
+                  << "         2. Enter ISBN                | --ISBN            " << newISBN << "\n"
+                  << "         3. Enter Author              | --Author          " << newAuthor << "\n"
+                  << "         4. Enter Publisher           | --Publisher       " << newPublisher << "\n"
+                  << "         5. Enter Date                | --Date Added      " << newDate << "\n"
+                  << "         6. Enter Quantity            | --Quantity        " << newQuantity << "\n"
+                  << "         7. Enter Wholesale Cost      | --Wholesale Cost  $" << newWholesaleCost << "\n"
+                  << "         8. Enter Retail Price        | --Retail Price    $" << newRetailPrice << "\n"
                   << "         9. Save book to inventory                                                         \n"
                   << "         0. Return to main menu                                                            \n"
                   << "                                                                                           \n"
@@ -271,19 +335,20 @@ void editBook(string bookTitle[20], string isbn[20], string author[20], string p
                   << "                              Today's date: " << date << "\n"
                   << "                            Current Database Size: " << index << "                       \n"
                   << "                                                                                           \n"
-                  << "         1. Enter book title                | --Title           " << bookTitle[index] << "\n"
-                  << "         2. Enter ISBN                      | --ISBN            " << isbn[index] << "\n"
-                  << "         3. Enter Author                    | --Author          " << author[index] << "\n"
-                  << "         4. Enter Publisher                 | --Publisher       " << publisher[index] << "\n"
-                  << "         5. Enter Date                      | --Date Added      " << dateAdded[index] << "\n"
-                  << "         6. Enter Quantity                  | --Quantity        " << quantity[index] << "\n"
-                  << "         7. Enter Wholesale Cost            | --Wholesale Cost  $" << wholesaleCost[index] << "\n"
-                  << "         8. Enter Retail Price              | --Retail Price    $" << retailPrice[index] << "\n"
-                  << "         0. Return to main menu                                                            \n"
+                  << "         1. Edit Book Title                | --Title           " << bookTitle[index] << "\n"
+                  << "         2. Edit ISBN                      | --ISBN            " << isbn[index] << "\n"
+                  << "         3. Edit Author                    | --Author          " << author[index] << "\n"
+                  << "         4. Edit Publisher                 | --Publisher       " << publisher[index] << "\n"
+                  << "         5. Edit Date                      | --Date Added      " << dateAdded[index] << "\n"
+                  << "         6. Edit Quantity                  | --Quantity        " << quantity[index] << "\n"
+                  << "         7. Edit Wholesale Cost            | --Wholesale Cost  $" << wholesaleCost[index] << "\n"
+                  << "         8. Edit Retail Price              | --Retail Price    $" << retailPrice[index] << "\n"
+                  << "         0. Return to Main Menu                                                            \n"
                   << "                                                                                           \n"
                   << "-------------------------------------------------------------------------------------------\n";
         getIntegerInput("Enter a number between 0-9", choice);
 
+        // braces are reqired to keep the context
         switch (choice) {
             case 1: {
                 getStringInput("Please enter the book name", bookTitle[index]);
@@ -322,8 +387,6 @@ void editBook(string bookTitle[20], string isbn[20], string author[20], string p
             case 7: {
                 getDoubleInput("Please enter the wholesale cost", wholesaleCost[index]);
                 break;
-                std::cin.clear();
-
             }
             case 8: {
                 getDoubleInput("Please enter the retail price", retailPrice[index]);
@@ -340,8 +403,20 @@ void editBook(string bookTitle[20], string isbn[20], string author[20], string p
     }
 }
 
-void deleteBook() {
-    std::cout << "You selected Delete Book" << std::endl;
+void deleteBook(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
+                string dateAdded[20], int quantity[20], double wholesaleCost[20], double retailPrice[20],
+                int deleteIndex, int &index) {
+    for (int i = deleteIndex; i < index - 1; i++) {
+        bookTitle[i] = bookTitle[i + 1];
+        isbn[i] = isbn[i + 1];
+        author[i] = author[i + 1];
+        publisher[i] = publisher[i + 1];
+        dateAdded[i] = dateAdded[i + 1];
+        quantity[i] = quantity[i + 1];
+        wholesaleCost[i] = wholesaleCost[i + 1];
+        retailPrice[i] = retailPrice[i + 1];
+    }
+    index--;
 }
 
 void getDate(char target[60]) {

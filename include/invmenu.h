@@ -34,7 +34,7 @@ void editBook(string[20], string[20], string[20], string[20], string[20], int[20
  * Pre-Condition: No post-conditions
  * Post-Condition: No post-conditions
  ***************************************************************/
-void deleteBook();
+void deleteBook(string[20], string[20], string[20], string[20], string[20], int[20], double[20], double[20], int, int&);
 
 /* **************************************************************
  * Pre-Condition: No post-conditions
