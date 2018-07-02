@@ -92,7 +92,7 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                     break;
                 }
                 std::string search;
-                char confirmation;
+                std::string confirmation;
                 getStringInput("Enter the book you want to edit. 'cancel' to go back", search);
                 if (search == "cancel") {
                     break;
@@ -108,11 +108,10 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
 
                 printBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
                           searchIndex);
-                std::cout << "Edit this record?" << std::endl;
-                std::cin.ignore(1000, '\n');
-                std::cin >> confirmation;
+                getStringInput("Edit this record?", confirmation);
 
-                if (tolower(confirmation) == 'y') {
+
+                if (tolower(confirmation[0]) == 'y') {
                     clearScreen();
                     editBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
                                searchIndex);
@@ -226,6 +225,7 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
                     int searchIndex = lookUpBook(temp, bookTitle, isbn, index);
                     if (searchIndex > -1) {
                         std::cout << "That ISBN already exists in the database." << std::endl;
+                        std::cin.get();
                         continue;
                     }
                     newISBN = temp;
@@ -260,6 +260,7 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
             case 9: {
                 if (index >= 20) {
                     std::cout << "The database is already completely full." << std::endl;
+                    std::cin.get();
                     break;
                 }
                 bookTitle[index] = newBookTitle;

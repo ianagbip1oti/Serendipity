@@ -147,7 +147,7 @@ void getStringInput(const char *prompt, std::string &choice) {
         // we need to clear the buffer from
         // the previous cin >> statements
         std::string temp;
-        std::cin.ignore(1000, '\n');
+        std::cin.ignore(1000000, '\n');
         std::getline(std::cin, temp);
         if (temp.empty()) {
             std::cin.ignore(1000, '\n');
