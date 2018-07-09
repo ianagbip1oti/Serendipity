@@ -27,16 +27,23 @@
  * -------------        ------------            -----------
  * choice               int                     null
  * success              bool                    ?
+ * newBookTitle         string                  EMPTY
+ * newISBN              string                  EMPTY
+ * newAuthor            string                  EMPTY
+ * newPublisher         string                  EMPTY
+ * newDate              string                  EMPTY
+ * newQuantity          int                     0
+ * newWholesaleCost     double                  0
+ * newRetailPrice       double                  0
  */
 #include <iostream>
 #include <iomanip>
 #include <cstring>
+#include <bookinfo.h>
 #include "mainmenu.h"
 #include "invmenu.h"
 
-void invMenu(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
-             string dateAdded[20], int quantity[20], double wholesaleCost[20], double retailPrice[20], int &index) {
-
+void invMenu(Book books[20], int &index) {
     int choice;
     while (true) {
         clearScreen();
@@ -51,17 +58,17 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                   << "|         5. Return to the Main Menu       |\n"
                   << "|                                          |\n"
                   << "--------------------------------------------" << std::endl;
-        getIntegerInput("Enter a number between 1-5", choice);
+        choice =getIntegerInput("Enter a number between 1-5");
         switch (choice) {
             case 1:
                 while (true) {
                     std::string search;
                     char confirmation;
-                    getStringInput("Enter the book you want to search. 'cancel' to go back", search);
+                    search = getStringInput("Enter the book you want to search. 'cancel' to go back");
                     if (search == "cancel") {
                         break;
                     }
-                    int searchIndex = lookUpBook(search, bookTitle, isbn, index);
+                    int searchIndex = lookUpBook(search, books, index);
 
                     if (searchIndex == -1) {
                         std::cout << "That book was not found, press enter to search again." << std::endl;
@@ -69,12 +76,11 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                         continue;
                     }
 
-                    std::cout << "[FOUND]: " << bookTitle[searchIndex] << "\nView this record? (y/n)\n";
+                    std::cout << "[FOUND]: " << books[searchIndex].getTitle() << "\nView this record? (y/n)\n";
                     std::cin >> confirmation;
                     if (tolower(confirmation) == 'y') {
                         clearScreen();
-                        printBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
-                                  searchIndex);
+                        books[searchIndex].print();
                         std::cin.ignore(1000, '\n');
                         std::cin.get();
                     }
@@ -82,7 +88,7 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                 }
                 break;
             case 2:
-                addBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
+                addBook(books, index);
                 break;
             case 3: {
                 if (index == 0) {
@@ -93,11 +99,11 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                 }
                 std::string search;
                 std::string confirmation;
-                getStringInput("Enter the book you want to edit. 'cancel' to go back", search);
+                search = getStringInput("Enter the book you want to edit. 'cancel' to go back");
                 if (search == "cancel") {
                     break;
                 }
-                int searchIndex = lookUpBook(search, bookTitle, isbn, index);
+                int searchIndex = lookUpBook(search, books, index);
 
 
                 if (searchIndex == -1) {
@@ -105,45 +111,43 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                     std::cin.get();
                     continue;
                 }
+                Book book = books[searchIndex];
 
-                printBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
-                          searchIndex);
-                getStringInput("Edit this record?", confirmation);
+
+                book.print();
+                confirmation = getStringInput("Edit this record?");
 
 
                 if (tolower(confirmation[0]) == 'y') {
                     clearScreen();
-                    editBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
-                               searchIndex);
+                    editBook(books, searchIndex);
                 }
 
                 break;
             }
             case 4: {
-                while (true){
+                while (true) {
                     std::string search;
                     char confirmation;
-                    getStringInput("Enter the name or the ISBN of the book you want to delete. 'cancel' to go back", search);
+                    search =  getStringInput("Enter the name or the ISBN of the book you want to delete. 'cancel' to go back");
                     if (search == "cancel") {
                         break;
                     }
-                    int searchIndex = lookUpBook(search, bookTitle, isbn, index);
-
-
+                    int searchIndex = lookUpBook(search, books, index);
                     if (searchIndex == -1) {
                         std::cout << "That book was not found, press enter to search again." << std::endl;
                         std::cin.get();
                         continue;
                     }
 
-                    std::cout << "[FOUND]: " << bookTitle[searchIndex] << "\nAre you sure you want to delete this record? (y/n)\n";
+                    std::cout << "[FOUND]: " << books[searchIndex].getTitle()
+                              << "\nAre you sure you want to delete this record? (y/n)\n";
                     std::cin.ignore(1000, '\n');
                     std::cin >> confirmation;
 
                     if (tolower(confirmation) == 'y') {
                         clearScreen();
-                        deleteBook(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice,
-                                   searchIndex, index);
+                        deleteBook(books, searchIndex, index);
                     } else {
                         break;
                     }
@@ -151,7 +155,7 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
                     std::cout << "Delete another book? (y/n)" << std::endl;
                     std::cin >> confirmation;
 
-                    if (tolower(confirmation) == 'y'){
+                    if (tolower(confirmation) == 'y') {
                         continue;
                     } else {
                         break;
@@ -171,9 +175,8 @@ void invMenu(string bookTitle[20], string isbn[20], string author[20], string pu
 }
 
 
-void addBook(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
-             string dateAdded[20], int quantity[20], double wholesaleCost[20], double retailPrice[20], int &index) {
 
+void addBook(Book books[20], int &index) {
     string newBookTitle = "EMPTY";
     string newISBN = "EMPTY";
     string newAuthor = "EMPTY";
@@ -190,6 +193,9 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
     time(&raw);
     time_info = localtime(&raw);
     strftime(buffer, sizeof(buffer), "%d-%m-%Y", time_info);
+
+    Book book;
+
 
     while (true) {
         clearScreen();
@@ -211,18 +217,18 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
                   << "         0. Return to main menu                                                            \n"
                   << "                                                                                           \n"
                   << "-------------------------------------------------------------------------------------------\n";
-        getIntegerInput("Enter a number between 0-9", choice);
+        choice = getIntegerInput("Enter a number between 0-9");
 
         switch (choice) {
             case 1: {
-                getStringInput("Please enter the book name", newBookTitle);
+                newBookTitle = getStringInput("Please enter the book name");
                 break;
             }
             case 2: {
                 while (true) {
                     std::string temp;
-                    getStringInput("Please enter the ISBN", temp);
-                    int searchIndex = lookUpBook(temp, bookTitle, isbn, index);
+                    temp = getStringInput("Please enter the ISBN");
+                    int searchIndex = lookUpBook(temp, books, index);
                     if (searchIndex > -1) {
                         std::cout << "That ISBN already exists in the database." << std::endl;
                         std::cin.get();
@@ -234,27 +240,27 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
                 break;
             }
             case 3: {
-                getStringInput("Please enter the author", newAuthor);
+                newAuthor = getStringInput("Please enter the author");
                 break;
             }
             case 4: {
-                getStringInput("Please enter the publisher", newPublisher);
+                newPublisher = getStringInput("Please enter the publisher");
                 break;
             }
             case 5: {
-                getStringInput("Please enter the date", newDate);
+                newDate = getStringInput("Please enter the date");
                 break;
             }
             case 6: {
-                getIntegerInput("Please enter the quantity on hand", newQuantity);
+                newQuantity = getIntegerInput("Please enter the quantity on hand");
                 break;
             }
             case 7: {
-                getDoubleInput("Please enter the wholesale cost", newWholesaleCost);
+                newWholesaleCost = getDoubleInput("Please enter the wholesale cost");
                 break;
             }
             case 8: {
-                getDoubleInput("Please enter the retail price", newRetailPrice);
+                newRetailPrice =  getDoubleInput("Please enter the retail price");
                 break;
             }
             case 9: {
@@ -263,15 +269,18 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
                     std::cin.get();
                     break;
                 }
-                bookTitle[index] = newBookTitle;
-                isbn[index] = newISBN;
-                author[index] = newAuthor;
-                publisher[index] = newPublisher;
-                dateAdded[index] = newDate;
-                quantity[index] = newQuantity;
-                wholesaleCost[index] = newWholesaleCost;
-                retailPrice[index] = newRetailPrice;
+                book.setTitle(newBookTitle);
+                book.setISBN(newISBN);
+                book.setAuthor(newAuthor);
+                book.setPublisher(newPublisher);
+                book.setDateAdded(newDate);
+                book.setQuantity(newQuantity);
+                book.setWholesaleCost(newWholesaleCost);
+                book.setRetailPrice(newRetailPrice);
+
+                books[index] = book;
                 index++;
+
                 newBookTitle = "EMPTY";
                 newISBN = "EMPTY";
                 newAuthor = "EMPTY";
@@ -294,24 +303,12 @@ void addBook(string bookTitle[20], string isbn[20], string author[20], string pu
     }
 }
 
-void printBook(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
-               string dateAdded[20], int quantity[20], double wholesaleCost[20], double retailPrice[20], int &index) {
-    std::cout << "           Title: " << bookTitle[index] << std::endl
-              << "            ISBN: " << isbn[index] << std::endl
-              << "          Author: " << author[index] << std::endl
-              << "       Publisher: " << publisher[index] << std::endl
-              << "      Date Added: " << dateAdded[index] << std::endl
-              << "Quantity on hand: " << quantity[index] << std::endl
-              << "  Wholesale Cost: $" << wholesaleCost[index] << std::endl
-              << "    Retail Price: $" << retailPrice[index] << std::endl
-              << "Press Enter to go back" << std::endl;
-}
 
-
-int lookUpBook(string search, string bookTitle[20], string isbn[20], int &index) {
+int lookUpBook(string search, Book books[20], int &index) {
     for (int i = 0; i < index; i++) {
-        const int titlePos = bookTitle[i].find(search);
-        const bool matchingISBN = isbn[i] == search;
+        Book book = books[i];
+        const int titlePos = book.getTitle().find(search);
+        const bool matchingISBN = book.getISBN() == search;
 
         if (titlePos > -1 || matchingISBN) {
             return i;
@@ -320,77 +317,76 @@ int lookUpBook(string search, string bookTitle[20], string isbn[20], int &index)
     return std::string::npos;
 }
 
-void editBook(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
-              string dateAdded[20], int quantity[20], double wholesaleCost[20], double retailPrice[20], int &index) {
-
-
+void editBook(Book books[20], int &index) {
     int choice;
     char date[60];
     getDate(date);
 
     while (true) {
         clearScreen();
+        Book book = books[index];
         std::cout << "-------------------------------------------------------------------------------------------\n"
                   << "                                 Serendipity Booksellers                                   \n"
                   << "                                      Edit Book                                            \n"
                   << "                              Today's date: " << date << "\n"
                   << "                            Current Database Size: " << index << "                       \n"
                   << "                                                                                           \n"
-                  << "         1. Edit Book Title                | --Title           " << bookTitle[index] << "\n"
-                  << "         2. Edit ISBN                      | --ISBN            " << isbn[index] << "\n"
-                  << "         3. Edit Author                    | --Author          " << author[index] << "\n"
-                  << "         4. Edit Publisher                 | --Publisher       " << publisher[index] << "\n"
-                  << "         5. Edit Date                      | --Date Added      " << dateAdded[index] << "\n"
-                  << "         6. Edit Quantity                  | --Quantity        " << quantity[index] << "\n"
-                  << "         7. Edit Wholesale Cost            | --Wholesale Cost  $" << wholesaleCost[index] << "\n"
-                  << "         8. Edit Retail Price              | --Retail Price    $" << retailPrice[index] << "\n"
+                  << "         1. Edit Book Title                | --Title           " << book.getTitle() << "\n"
+                  << "         2. Edit ISBN                      | --ISBN            " << book.getISBN() << "\n"
+                  << "         3. Edit Author                    | --Author          " << book.getAuthor() << "\n"
+                  << "         4. Edit Publisher                 | --Publisher       " << book.getPublisher() << "\n"
+                  << "         5. Edit Date                      | --Date Added      " << book.getDateAdded() << "\n"
+                  << "         6. Edit Quantity                  | --Quantity        " << book.getQuantity() << "\n"
+                  << "         7. Edit Wholesale Cost            | --Wholesale Cost  $" << book.getWholesaleCost()
+                  << "\n"
+                  << "         8. Edit Retail Price              | --Retail Price    $" << book.getRetailPrice() << "\n"
                   << "         0. Return to Main Menu                                                            \n"
                   << "                                                                                           \n"
                   << "-------------------------------------------------------------------------------------------\n";
-        getIntegerInput("Enter a number between 0-9", choice);
+        choice = getIntegerInput("Enter a number between 0-9");
 
         // braces are reqired to keep the context
         switch (choice) {
             case 1: {
-                getStringInput("Please enter the book name", bookTitle[index]);
+                book.setTitle(getStringInput("Please enter the book name"));
                 break;
             }
             case 2: {
                 while (true) {
                     std::string temp;
-                    getStringInput("Please enter the ISBN", temp);
-                    int searchIndex = lookUpBook(temp, bookTitle, isbn, index);
+                    temp = getStringInput("Please enter the ISBN");
+                    int searchIndex = lookUpBook(temp, books, index);
                     if (searchIndex > -1) {
                         std::cout << "That ISBN already exists in the database." << std::endl;
                         continue;
                     }
-                    isbn[index] = temp;
+                    book.setISBN(temp);
                     break;
                 }
                 break;
             }
             case 3: {
-                getStringInput("Please enter the author", author[index]);
+                book.setAuthor(getStringInput("Please enter the author"));
                 break;
             }
             case 4: {
-                getStringInput("Please enter the publisher", publisher[index]);
+                book.setPublisher(getStringInput("Please enter the publisher"));
                 break;
             }
             case 5: {
-                getStringInput("Please enter the date", dateAdded[index]);
+                book.setDateAdded(getStringInput("Please enter the date"));
                 break;
             }
             case 6: {
-                getIntegerInput("Please enter the quantity on hand", quantity[index]);
+                book.setQuantity(getIntegerInput("Please enter the quantity on hand"));
                 break;
             }
             case 7: {
-                getDoubleInput("Please enter the wholesale cost", wholesaleCost[index]);
+                book.setWholesaleCost(getDoubleInput("Please enter the wholesale cost"));
                 break;
             }
             case 8: {
-                getDoubleInput("Please enter the retail price", retailPrice[index]);
+                book.setRetailPrice(getDoubleInput("Please enter the retail price"));
                 break;
             }
             case 0:
@@ -404,18 +400,18 @@ void editBook(string bookTitle[20], string isbn[20], string author[20], string p
     }
 }
 
-void deleteBook(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
-                string dateAdded[20], int quantity[20], double wholesaleCost[20], double retailPrice[20],
-                int deleteIndex, int &index) {
+void deleteBook(Book books[20], int deleteIndex, int index) {
     for (int i = deleteIndex; i < index - 1; i++) {
-        bookTitle[i] = bookTitle[i + 1];
-        isbn[i] = isbn[i + 1];
-        author[i] = author[i + 1];
-        publisher[i] = publisher[i + 1];
-        dateAdded[i] = dateAdded[i + 1];
-        quantity[i] = quantity[i + 1];
-        wholesaleCost[i] = wholesaleCost[i + 1];
-        retailPrice[i] = retailPrice[i + 1];
+        Book targetBook = books[i + 1];
+        Book currentBook = books[i];
+        currentBook.setTitle(targetBook.getTitle());
+        currentBook.setISBN(targetBook.getISBN());
+        currentBook.setAuthor(targetBook.getAuthor());
+        currentBook.setPublisher(targetBook.getPublisher());
+        currentBook.setDateAdded(targetBook.getDateAdded());
+        currentBook.setQuantity(targetBook.getQuantity());
+        currentBook.setWholesaleCost(targetBook.getWholesaleCost());
+        currentBook.setRetailPrice(targetBook.getRetailPrice());
     }
     index--;
 }

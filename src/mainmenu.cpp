@@ -26,6 +26,8 @@
  * -------------        ------------            -----------
  * choice               int                     null
  * success              bool                    null
+ * temp                 string                  ""
+ * temp                 double                  null
  */
 
 #include <iostream>
@@ -34,30 +36,22 @@
 #include "invmenu.h"
 #include "reports.h"
 #include <cstdlib>
+#include <bookinfo.h>
 
 using std::string;
 const int DBSIZE = 20;
 
 int main() {
-    string bookTitle[DBSIZE];
-    string isbn[DBSIZE];
-    string author[DBSIZE];
-    string publisher[DBSIZE];
-    string dateAdded[DBSIZE];
-    int quantity[DBSIZE];
-    double wholesaleCost[DBSIZE];
-    double retailPrice[DBSIZE];
+    Book books[DBSIZE];
     int bookCount = 0;
 
-    displayMainMenu(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, bookCount);
+    displayMainMenu(books, bookCount);
     // clearing the screen before exiting
     clearScreen();
     return 0;
 }
 
-void displayMainMenu(string bookTitle[DBSIZE], string isbn[DBSIZE], string author[DBSIZE], string publisher[DBSIZE],
-                     string dateAdded[DBSIZE], int quantity[DBSIZE], double wholesaleCost[DBSIZE],
-                     double retailPrice[DBSIZE], int &index) {
+void displayMainMenu(Book books[20], int& index) {
 
     int choice;
     bool success;
@@ -74,14 +68,14 @@ void displayMainMenu(string bookTitle[DBSIZE], string isbn[DBSIZE], string autho
                   << "|                                          |\n"
                   << "--------------------------------------------" << std::endl;
 
-        getIntegerInput("Enter a number between 1-4", choice);
+        choice = getIntegerInput("Enter a number between 1-4");
 
         switch (choice) {
             case 1:
-                cashier(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
+                cashier(books, index);
                 break;
             case 2:
-                invMenu(bookTitle, isbn, author, publisher, dateAdded, quantity, wholesaleCost, retailPrice, index);
+                invMenu(books, index);
                 break;
             case 3:
                 reports();
@@ -105,7 +99,7 @@ void clearScreen() {
 }
 
 
-void getIntegerInput(const char *prompt, int &choice) {
+int getIntegerInput(const char *prompt) {
     while (true) {
         std::cout << prompt << std::endl;
         int temp;
@@ -117,13 +111,12 @@ void getIntegerInput(const char *prompt, int &choice) {
             std::cin.get();
             continue;
         }
-        choice = temp;
-        return;
+        return temp;
     }
 }
 
 
-void getDoubleInput(const char *prompt, double &choice) {
+double getDoubleInput(const char *prompt) {
     while (true) {
         std::cout << prompt << std::endl;
         double temp;
@@ -135,13 +128,12 @@ void getDoubleInput(const char *prompt, double &choice) {
             std::cin.get();
             continue;
         }
-        choice = temp;
-        return;
+        return temp;
     }
 }
 
 
-void getStringInput(const char *prompt, std::string &choice) {
+std::string getStringInput(const char *prompt) {
     while (true) {
         std::cout << prompt << std::endl;
         // we need to clear the buffer from
@@ -157,8 +149,7 @@ void getStringInput(const char *prompt, std::string &choice) {
             continue;
         }
         std::cin.clear();
-        choice = temp;
-        return;
+        return temp;
     }
 }
 

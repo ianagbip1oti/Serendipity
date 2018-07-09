@@ -1,2 +1,3 @@
 @echo off
-START bin/serendipity.exe
+
+START serendipity.exe

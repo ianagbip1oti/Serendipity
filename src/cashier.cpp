@@ -56,8 +56,7 @@ void getInput(const char* prompty, int& destination){
     cin >> destination;
 }
 
-void cashier(string bookTitle[20], string isbn[20], string author[20], string publisher[20],
-             string dateAdded[20], int quantityOnHand[20], double wholesaleCost[20], double retailPrice[20], int& index){
+void cashier(Book books[20], int& index){
     int menuSelection;
     bool success;
     char choice;
@@ -74,8 +73,6 @@ void cashier(string bookTitle[20], string isbn[20], string author[20], string pu
             float total = finalTax * subTotal;
 
             clearScreen();
-    
-
             std::cout << "Date: " << date << "\n"
                       << "Quantity:  " << quantity << "\n"
                       << "ISBN: " << isbn << "\n"
@@ -125,7 +122,7 @@ void cashier(string bookTitle[20], string isbn[20], string author[20], string pu
                   << "         6. Back to the Main Menu         \n"
                   << "                                          \n";
         
-        getIntegerInput("Enter a number between 1-6", menuSelection);
+        menuSelection = getIntegerInput("Enter a number between 1-6");
 
         switch (menuSelection){
         case 1:
