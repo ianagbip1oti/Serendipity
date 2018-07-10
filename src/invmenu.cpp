@@ -58,13 +58,13 @@ void invMenu(Book books[20], int &index) {
                   << "|         5. Return to the Main Menu       |\n"
                   << "|                                          |\n"
                   << "--------------------------------------------" << std::endl;
-        choice =getIntegerInput("Enter a number between 1-5");
+        choice = getIntegerInput("Enter a number between 1-5");
         switch (choice) {
             case 1:
                 while (true) {
                     std::string search;
                     char confirmation;
-                    search = getStringInput("Enter the book you want to search. 'cancel' to go back");
+                    search = getStringInput("Enter the book you want to search or 'cancel' to go back");
                     if (search == "cancel") {
                         break;
                     }
@@ -99,7 +99,7 @@ void invMenu(Book books[20], int &index) {
                 }
                 std::string search;
                 std::string confirmation;
-                search = getStringInput("Enter the book you want to edit. 'cancel' to go back");
+                search = getStringInput("Enter the book you want to edit or 'cancel' to go back");
                 if (search == "cancel") {
                     break;
                 }
@@ -129,7 +129,7 @@ void invMenu(Book books[20], int &index) {
                 while (true) {
                     std::string search;
                     char confirmation;
-                    search =  getStringInput("Enter the name or the ISBN of the book you want to delete. 'cancel' to go back");
+                    search =  getStringInput("Enter the name or the ISBN of the book you want to delete or 'cancel' to go back");
                     if (search == "cancel") {
                         break;
                     }
