@@ -11,7 +11,6 @@ std::string Book::getTitle() {
 }
 
 void Book::setISBN(std::string newISBN) {
-
     isbn = newISBN;
 }
 
