@@ -40,7 +40,6 @@
 #include <iomanip>
 #include <invmenu.h>
 #include "mainmenu.h"
-#include "cashier.h"
 #include <cstring>
 
 using std::setw;
