@@ -8,30 +8,29 @@ class Book {
      * in the namespace of files that import this
      * header
      */
-    using std::string;
 
-    string title;
-    string isbn;
-    string author;
-    string publisher;
-    string dateAdded;
+    std::string title;
+    std::string isbn;
+    std::string author;
+    std::string publisher;
+    std::string dateAdded;
     double wholesaleCost;
     double retailPrice;
     int quantity;
 public:
-    void setTitle(string);
+    void setTitle(std::string);
     std::string getTitle();
 
-    void setISBN(string);
+    void setISBN(std::string);
     std::string getISBN();
 
-    void setAuthor(string);
+    void setAuthor(std::string);
     std::string getAuthor();
 
-    void setPublisher(string);
+    void setPublisher(std::string);
     std::string getPublisher();
 
-    void setDateAdded(string);
+    void setDateAdded(std::string);
     std::string getDateAdded();
 
     void setWholesaleCost(double);

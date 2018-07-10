@@ -39,6 +39,8 @@
 #include <string>
 #include <iomanip>
 #include "mainmenu.h"
+#include "cashier.h"
+
 
 void getInput(const char* prompty, std::string& destination){
     using namespace std;
@@ -57,7 +59,7 @@ void getInput(const char* prompty, int& destination){
 }
 
 void cashier(Book books[20], int& index){
-    int menuSelection;
+    std::string bookSelection;
     bool success;
     char choice;
     std::string date = "";
@@ -66,6 +68,7 @@ void cashier(Book books[20], int& index){
     std::string title = "";
     float price = 0.f;
     const float TAX = 1.06;
+
     do {
         if (date != "" && ISBN != "" && title != "" && quantity != 0 && price != 0.f){
             float subTotal = price * quantity;
@@ -85,7 +88,6 @@ void cashier(Book books[20], int& index){
                       << "Total: " << total << std::endl;
 
             while (true){
-                
                 std::cout << "Would you like to enter another book? (y/n)" << std::endl;
                 std::cin >> choice;
                 if (std::cin.fail() || (tolower(choice) != 'n' && tolower(choice) != 'y')){
@@ -110,52 +112,8 @@ void cashier(Book books[20], int& index){
 
         clearScreen();
         
+        bookSelection = getStringInput("Search Book > ");
+        const int index = lookUpBook(bookSelection, books, index);
 
-        std::cout << "         Serendipity Booksellers           \n" 
-                  << "              Cashier Module               \n"
-                  << "                                           \n"
-                  << "         1. Enter publish Date         Current Date: " << date << "\n"                 
-                  << "         2. Enter Desired Quantity     Current Quantity:  " << quantity << "\n"
-                  << "         3. Enter the ISBN             Current ISBN: " << ISBN << "\n"                        
-                  << "         4. Enter the Title            Current Title: " << title << "\n"                        
-                  << "         5. Enter the Price            Current Price " << price << "\n"                         
-                  << "         6. Back to the Main Menu         \n"
-                  << "                                          \n";
-        
-        menuSelection = getIntegerInput("Enter a number between 1-6");
-
-        switch (menuSelection){
-        case 1:
-            getInput("Please enter the date the book was published in.", date);
-            break;
-        case 2:
-            getInput("Please enter the quantity.", quantity);
-            break;
-        case 3:
-            std::cout << "Please enter the ISBN." << std::endl;
-            std::cin.clear();
-            std::cin.sync();
-            std::getline(std::cin, ISBN);
-            break;
-        case 4:
-            std::cout << "Please enter the title." << std::endl;
-            std::cin.clear();
-            std::cin.sync();
-            std::getline(std::cin, title);
-            break;
-        case 5:
-            std::cout << "Please enter the price." << std::endl;
-            std::cin.clear();
-            std::cin.sync();
-            std::cin >> price;
-            break;
-        case 6:
-            return;
-        default:
-            std::cout << "That is not a valid choice... Press Enter to continue" << std::endl;
-            std::cin.ignore().get();
-            continue;
-        }
-        
     } while(true);
 }

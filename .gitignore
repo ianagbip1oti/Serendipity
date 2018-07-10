@@ -4,6 +4,7 @@ serendipity
 # Prerequisites
 *.d
 
+CMakeFiles/
 # Compiled Object files
 *.slo
 *.lo
