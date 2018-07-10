@@ -83,7 +83,7 @@ void displayMainMenu(Book books[20], int &index) {
             case 4:
                 return;
             default:
-                std::cout << "That is not a valid choice... Press Enter to continue" << std::endl;
+                std::cout << "That is not a valid choice... Press enter to continue" << std::endl;
                 std::cin.ignore().get();
                 continue;
         }
