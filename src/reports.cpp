@@ -37,7 +37,6 @@
 
 void reports(){
     int choice;
-    bool success;
     do {
         clearScreen();
         std::cout << "--------------------------------------------\n"
@@ -54,7 +53,7 @@ void reports(){
                   << "|                                          |\n"
                   << "--------------------------------------------\n";
             
-        getIntegerInput("Enter a number between 1-7", choice);
+        choice = getIntegerInput("Enter a number between 1-7");
 
         switch (choice){
         case 1:
@@ -78,7 +77,7 @@ void reports(){
         case 7:
             return;
         }
-    } while (success);
+    } while (true);
 }
 
 
@@ -97,7 +96,6 @@ void repRetail(){
 void repCost(){
     std::cout << "You selected Listing By Cost" << std::endl;
 }
-
 
 void repQty(){
     std::cout << "You selected Listing By Quantity" << std::endl;

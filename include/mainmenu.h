@@ -33,3 +33,8 @@ std::string getStringInput(const char*);
  ***************************************************************/
 double getDoubleInput(const char*);
 
+/* **************************************************************
+ * pre-condition: no post-conditions
+ * post-condition: no post-conditions
+ ***************************************************************/
+bool getBooleanInput(const char *);

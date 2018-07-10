@@ -38,82 +38,87 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
+#include <invmenu.h>
 #include "mainmenu.h"
 #include "cashier.h"
+#include <cstring>
 
-
-void getInput(const char* prompty, std::string& destination){
-    using namespace std;
-    cout << prompty << endl;
-    cin.clear();
-    cin.sync();
-    getline(cin, destination);
-}
-
-void getInput(const char* prompty, int& destination){
-    using namespace std;
-    cout << prompty << endl;
-    cin.clear();
-    cin.sync();
-    cin >> destination;
-}
+using std::setw;
 
 void cashier(Book books[20], int& index){
+    Book basket[20];
+    int basketSize = 0;
+
     std::string bookSelection;
-    bool success;
-    char choice;
-    std::string date = "";
-    int quantity = 0;
-    std::string ISBN = "";
-    std::string title = "";
-    float price = 0.f;
     const float TAX = 1.06;
 
     do {
-        if (date != "" && ISBN != "" && title != "" && quantity != 0 && price != 0.f){
-            float subTotal = price * quantity;
-            float finalTax = subTotal * TAX;
-            float total = finalTax * subTotal;
-
-            clearScreen();
-            std::cout << "Date: " << date << "\n"
-                      << "Quantity:  " << quantity << "\n"
-                      << "ISBN: " << isbn << "\n"
-                      << "Title: " << title << "\n"
-                      << "Title " << price << "\n"
-                      << "Thank you for shopping at serendipity\n\n";
-
-            std::cout << "Subtotal: " << subTotal << std::endl
-                      << "Tax: " << finalTax << std::endl
-                      << "Total: " << total << std::endl;
-
-            while (true){
-                std::cout << "Would you like to enter another book? (y/n)" << std::endl;
-                std::cin >> choice;
-                if (std::cin.fail() || (tolower(choice) != 'n' && tolower(choice) != 'y')){
-                    std::cin.clear();
-                    std::cin.ignore(1000, '\n');
-                    std::cout << "That is not a valid response" << std::endl;
-                    continue;
-                }
-                else if (tolower(choice) == 'y'){
-                    date = "";
-                    ISBN = "";
-                    title = "";
-                    quantity = 0;
-                    price = 0.f;
-                    break;
-                }
-                else {
-                    return;
-                }
-            }
-        }
-
         clearScreen();
         
-        bookSelection = getStringInput("Search Book > ");
-        const int index = lookUpBook(bookSelection, books, index);
+        bookSelection = getStringInput("Search Book ['back' to go back] > ");
 
+        if (bookSelection == "back"){
+            return;
+        }
+
+        const int bookIndex = lookUpBook(bookSelection, books, index);
+
+        if (bookIndex == -1){
+            std::cin.ignore(1000, '\n');
+            std::cout << "That was not a valid choice... Press enter to return" << std::endl;
+            std::cin.get();
+            continue;
+        }
+        Book book = books[bookIndex];
+
+        book.print();
+        int amount = getIntegerInput("How much would you like to purchase?");
+
+        clearScreen();
+        const int bookAmount = book.getQuantity();
+        if (amount > bookAmount){
+            std::cout << "Could only find " << bookAmount << " copies of this book" << std::endl;
+            amount = bookAmount;
+        }
+
+        book.setQuantity(amount);
+
+        book.print();
+        const bool isSure = getBooleanInput("Are you sure you want to purchase this book?");
+
+        if (!isSure){
+            continue;
+        }
+
+        basket[basketSize] = book;
+        basketSize++;
+        std::cout << setw(10) << "Qty" << setw(10) << "ISBN" << setw(10) << "Title"
+                  << setw(10) << "Price" << setw(10) << "Total" << '\n';
+
+        double basketTotal = 0;
+        for (int i = 0 ; i < basketSize ; i++){
+
+            double bookTotal = book.getRetailPrice() * book.getQuantity();
+            basketTotal += bookTotal;
+
+            std::cout << setw(10) << book.getQuantity()
+                      << setw(10) << book.getISBN()
+                      << setw(10) << book.getTitle()
+                      << setw(10) << book.getRetailPrice()
+                      << setw(10) << bookTotal << '\n';
+        }
+
+        double finalTax = basketTotal * (TAX - 1);
+        double total = finalTax + basketTotal;
+
+        std::cout << setw(10) << "Subtotal: " << basketTotal  << std::endl
+                  << setw(10) << "Tax: " << finalTax << std::endl
+                  << setw(10) << "Total: " << total << std::endl
+                  << "Thanks for shopping at Serendipity" << std::endl;
+
+        const bool again = getBooleanInput("Would you like to add another book? (y/n)");
+        if (!again){
+            return;
+        }
     } while(true);
 }

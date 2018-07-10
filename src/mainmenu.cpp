@@ -51,7 +51,7 @@ int main() {
     return 0;
 }
 
-void displayMainMenu(Book books[20], int& index) {
+void displayMainMenu(Book books[20], int &index) {
 
     int choice;
     bool success;
@@ -154,3 +154,18 @@ std::string getStringInput(const char *prompt) {
 }
 
 
+bool getBooleanInput(const char *prompt) {
+    while (true) {
+        char choice;
+        std::cout << prompt << std::endl;
+        std::cin >> choice;
+        if (std::cin.fail() || (tolower(choice) != 'n' && tolower(choice) != 'y')) {
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            std::cout << "That is not a valid response" << std::endl;
+            continue;
+        }
+        return tolower(choice) == 'y';
+    }
+
+}
